@@ -1,0 +1,121 @@
+app.py
+from flask import Flask, render_template, request, redirect, url_for: Importing necessary modules from Flask for creating a web application.
+
+from predict import predict: Importing the predict function from the predict.py module.
+
+import os: Importing the os module to interact with the operating system.
+
+from tempfile import NamedTemporaryFile: Importing NamedTemporaryFile from tempfile to create a temporary file.
+
+app = Flask('image_description'): Creating a Flask app named image_description.
+
+@app.route('/'): Creating a route for the home page.
+
+def show_predict_stock_form():: Function to render the HTML template for the home page.
+
+@app.route('/results', methods=['POST']): Creating a route to handle POST requests for uploading files and displaying results.
+
+def results():: Function to handle file uploads, perform prediction, and return the predicted description.
+
+@app.route('/refresh'): Route to handle refreshing.
+
+def refresh():: Function to render the HTML template for the body.
+
+if __name__ == "__main__":: Starting the Flask application.
+
+predict.py
+import numpy as np: Importing the numpy library for numerical operations.
+
+from PIL import Image: Importing Image class from the PIL library to handle images.
+
+from pickle import load: Importing load function to load saved objects.
+
+from keras.applications.xception import preprocess_input: Importing preprocess_input function for preprocessing images for Xception model.
+
+from keras.preprocessing.sequence import pad_sequences: Importing pad_sequences for padding sequences to a fixed length.
+
+import tensorflow as tf: Importing TensorFlow library.
+
+def extract_features(image, x_interpreter):: Function to extract image features using Xception model.
+
+def word_for_id(integer):: Function to map integer IDs to words using the tokenizer.
+
+def generate_desc_lite(photo, interpreter):: Function to generate descriptions using the loaded model.
+
+def predict(image):: Function to perform prediction using extracted features and generate descriptions.
+
+max_length = 47: Maximum length of the sequence (caption).
+
+tokenizer = load(open("files/tokenizer.p","rb")): Loading the tokenizer object from a saved file.
+
+interpreter = tf.lite.Interpreter("files/model-110.tflite"): Loading the TFLite model and creating an interpreter for generating descriptions.
+
+x_interpreter = tf.lite.Interpreter("files/xception.tflite"): Loading the Xception TFLite model and creating an interpreter for extracting features.
+
+This code appears to be a Flask application that utilizes TensorFlow Lite models (model-110.tflite and xception.tflite) to generate descriptions for images uploaded by the user. The predict.py file contains functions related to feature extraction and generating descriptions using the loaded models and tokenizer. The app.py file handles the Flask routes, file uploads, and rendering templates.
+
+
+
+
+
+
+---------------*---------------------*------------------*---------------------*------------------------*--------------------
+
+numpy is used for numerical operations in Python.
+PIL (Python Imaging Library) is used for handling images.
+pickle is used for serializing and deserializing Python objects.
+preprocess_input from Keras is used to preprocess image data for the Xception model.
+pad_sequences from Keras is used to ensure that input sequences have the same length.
+tensorflow is used for building and training machine learning models.
+cv2 is OpenCV, a library for computer vision tasks.
+
+extract_features function:
+**************************
+
+
+def extract_features(image, x_interpreter):
+    # Code for extracting features from an image using Xception model.
+    # Resizes the image to (299, 299), converts to RGB, and preprocesses.
+    # Sets the input tensor for the Xception model, invokes it, and gets the output tensor.
+    # Returns the extracted features.
+word_for_id function:
+**********************
+def word_for_id(integer):
+    # Given an integer, finds the corresponding word in the tokenizer.
+    # Returns the word or None if not found.
+generate_desc_lite function:
+*************************
+def generate_desc_lite(photo, interpreter):
+    # Generates a textual description given an image using the provided interpreter.
+    # Uses a start token and iteratively predicts the next word until an end token is encountered.
+    # Returns the generated description.
+predict function:
+**********************
+def predict(image):
+    # Calls extract_features to get image features.
+    # Calls generate_desc_lite to generate a description using the features.
+    # Returns the generated description.
+Global Variables:
+
+max_length: Maximum length of sequences (set to 47).
+tokenizer: Loaded from a pickled file ("files/tokenizer.p") containing word-to-index mappings.
+interpreter: TensorFlow Lite interpreter for a custom model ("files/model-110.tflite").
+x_interpreter: TensorFlow Lite interpreter for the Xception model ("files/xception.tflite").
+Interpreter Setup:
+
+The code initializes and allocates tensors for both the custom model and the Xception model interpreters.
+Extracts input and output details (index) for both interpreters.
+Overall Workflow:
+
+predict function takes an image, extracts features, and generates a textual description for the image using the custom model.
+This code appears to be part of an image captioning system where a pre-trained Xception model is used to extract image features, and a custom model is used for generating textual descriptions. The models are loaded using TensorFlow Lite interpreters, and the image descriptions are generated based on the models and a pre-trained tokenizer.
+
+
+
+
+
+
+
+
+
+
